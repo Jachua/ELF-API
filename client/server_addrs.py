@@ -1,0 +1,3 @@
+addrs = {
+    "game_server": "",
+}

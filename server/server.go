@@ -37,7 +37,7 @@ func (s *server) IsHuman(in *pb.Player) bool {
 	return false
 }
 
-func CheckNil(in *pb.Step) *pb.Step {
+func checkNil(in *pb.Step) *pb.Step {
 	switch in {
 	case nil:
 		return &pb.Step{X: 20, Y: 20, Player: &pb.Player{Color: 3}}
@@ -47,15 +47,11 @@ func CheckNil(in *pb.Step) *pb.Step {
 }
 
 func (s *server) GetMove(ctx context.Context, in *pb.Player) (*pb.Step, error) {
-	//change this to be the default first move by AI
-	// if s.prevMovePlayer == nil {
-	// 	return &pb.Step{X: 1, Y: 1}, nil
-	// }
 
 	if s.IsHuman(in) {
-		return CheckNil(s.human.prevMove), nil
+		return checkNil(s.human.prevMove), nil
 	}
-	return CheckNil(s.AI.prevMove), nil
+	return checkNil(s.AI.prevMove), nil
 }
 
 func (s *server) SetMove(ctx context.Context, in *pb.Step) (*pb.State, error) {
@@ -78,16 +74,9 @@ func (s *server) HasMoved(ctx context.Context, in *pb.Player) (*pb.State, error)
 }
 
 func (s *server) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error) {
-	// if s.IsHuman(in) {
-	// 	//s.human.hasMoved = false
-	// 	s.nextPlayer = s.nextPlayer%2 + 1
-	// } else {
-	//s.AI.hasMoved = false
 	s.nextPlayer = s.nextPlayer%2 + 1
 	s.human.hasMoved = false
 	s.AI.hasMoved = false
-	// }
-	// log.Println("Next player has color: ", s.nextPlayer)
 	return &pb.State{Status: true}, nil
 }
 

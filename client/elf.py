@@ -5,6 +5,8 @@ import grpc
 import play_pb2
 import play_pb2_grpc
 
+from server_addrs import addrs
+
 
 def get_move():
     x = int(input("Enter coordiante x \n>"))
@@ -12,7 +14,11 @@ def get_move():
     return x, y
 
 def run():
-    channel = grpc.insecure_channel('localhost:50051')
+    address = addrs["game_server"]
+    if address != "":
+        channel = grpc.insecure_channel(address + ":50051")
+    else: 
+        channel = grpc.insecure_channel('localhost:50051')
     stub = play_pb2_grpc.TurnStub(channel)
     if input("Enter 'B' for Black, 'W' for White \n>").upper() == "B":
         human_color = 1
