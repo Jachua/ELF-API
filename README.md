@@ -10,17 +10,20 @@ Download Go [here](https://golang.org/dl/)
 
 After installing Go by the instructions, run ```export PATH=$PATH:$(go env GOPATH)/bin``` and ```export GOPATH=$(go env GOPATH)```.
 
-To install grpc, run ```go get -u google.golang.org/grpc```.
+Install grpc for go - run ```go get -u google.golang.org/grpc```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/go.html).
 
+Install grpc for python - run ```python -m pip install grpcio``` and then install grpc tools with ```python -m pip install grpcio-tools googleapis-common-protos```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
 
 
 ## **Setup**
 
-Run ```git clone https://github.com/Jachua/ELF.git $(go env GOPATH)/src/ELF```.
+Run ```git clone https://github.com/Jachua/ELF.git $(go env GOPATH)/src/ELF-API```.
 
 Set up the environment for OpenGo by the instructions posted on [pytorch/ELF](https://github.com/pytorch/ELF)
 
-Open 3 terminals, each navigate to the project root. In the first terminal, run```go run server/server.go``` . In another terminal, run ```source scripts/devmode_set_pythonpath.sh``` and navigate to ```scripts/elfgames/go```. Activate the AI engine by running ```./gtp.sh '../../../pretrained-go-19x19-v0.bin' --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 64 --resign_thres 0.05 --mcts_virtual_loss 1```. 
+Open 3 terminals, each navigate to the project root. In the first terminal, run```go run server/server.go``` . In another terminal, run ```source scripts/devmode_set_pythonpath.sh``` and navigate to ```scripts/elfgames/go```. Activate the AI engine by running ```./gtp.sh path/to/modelfile.bin --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1```. 
+
+*As noted by the original repo, ```mcts_rollout_per_thread``` can be modified to tune the AI response rate. 
 
 Run ```python client/elf.py``` and enter commands when prompted. The console will then display in turn the move received from the console and the move by OpenGO. 
 
