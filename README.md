@@ -1,7 +1,7 @@
 # API
-An interface that sets up a server to commicate with the OpenGo AI developed by the Facebook team.
+An interface that sets up a server to commicate with the [OpenGo AI](https://github.com/pytorch/ELF) developed by the Facebook team.
 
-## **Dependencies**
+## **Installation**
 
 * Go 1.10.3 darwin/amd64
 * Python 3.6.5
@@ -10,25 +10,71 @@ Download Go [here](https://golang.org/dl/)
 
 After installing Go by the instructions, run ```export PATH=$PATH:$(go env GOPATH)/bin``` and ```export GOPATH=$(go env GOPATH)```.
 
-Install grpc for go - run ```go get -u google.golang.org/grpc```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/go.html).
+After installing Go by the instructions, run 
+```
+$ export PATH=$PATH:$(go env GOPATH)/bin
+$ export GOPATH=$(go env GOPATH)
+```
 
-Install grpc for python - run ```python -m pip install grpcio``` and then install grpc tools with ```python -m pip install grpcio-tools googleapis-common-protos```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
+Installing grpc for go:
+```
+$ go get -u google.golang.org/grpc
+```
+or follow the instructions on [this page](https://grpc.io/docs/quickstart/go.html).
+
+Installing grpc for python:
+```
+python -m pip install grpcio
+python -m pip install grpcio-tools googleapis-common-protos
+```
+or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
 
 
 ## **Setup**
 
-Run ```git clone https://github.com/Jachua/ELF-API.git $(go env GOPATH)/src/ELF-API```.
+Run ```git clone https://github.com/Jachua/ELF-API.git $(go env GOPATH)/src/ELF-API``` to create a local copy of the API server.
 
-Set up the environment for OpenGo by the instructions posted on [this repo](https://github.com/Jachua/ELF)
+Set up the environment for the AI engine by the instructions posted on [this repo](https://github.com/Jachua/ELF).
 
-Open 3 terminals, each navigate to the project root. In the first terminal, run```go run server/server.go``` . In another terminal, run ```source scripts/devmode_set_pythonpath.sh``` and navigate to ```scripts/elfgames/go```. Activate the AI engine by running ```./gtp.sh path/to/modelfile.bin --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1```. 
+## **Deployment**
+
+The API constitues 3 major components: the game server, the client console CLI, and the AI engine.
+The game server must first be loaded for the client console and the AI engine to send out and receive messages from each other. 
+
+**Server**
+
+Navigate to the API project root and run ```go run server/server.go```.
+
+**Client console**
+
+
+Edit the ```game_server``` field in ```client/server_addrs.py``` to be the IP address where you want to run the game server. If unspecified, the game will run on local address. 
+
+Navigate to the API project root and run ```python client/elf.py```. The client console is where the prompts for entering commands and the moves received from OpenGo will be displayed. 
+
+Make sure that the server is up and running before starting the client session. 
+
+**AI engine**
+
+Download the AI engine from [here](https://github.com/Jachua/ELF). 
+
+Edit the ```game_server``` field in ```scripts/elfgames/go/server_addrs.py``` to be the same IP address that you have provided for the client console. 
+
+At the ELF project root, run ```source scripts/devmode_set_pythonpath.sh```. Navigate to ```scripts/elfgames/go``` and run ```./gtp.sh path/to/modelfile.bin --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1```. 
 
 *As noted in the original repo, ```mcts_rollout_per_thread``` can be modified to tune the AI response rate. 
 
-Edit the ```game_server``` field in ```client/server_addrs.py``` to be the IP address where you want to run the game server. If unspecified, the game will run on local address. The address provided must match the server address for ELF.
+You should now be able to play the game with OpenGo via the client console. 
 
-Run ```python client/elf.py``` and enter commands when prompted. The console will then display in turn the move received from the console and the move by OpenGO. 
+## **How it works**
 
+Once the server and the clients properly set up, the client console will ask you to choose the side you would like to play on. If you choose black, it will then prompts you to enther the coordinate where you want to make the first move. If you choose white, it will display where OpenGo has placed a stone, and you will see messages such as "AI placed on stone on coordinates 15, 15". The game thus progresses by logging the moves received from the client console and OpenGo in turn. 
+
+You may also observe how the game proceeds through the original CLI for the AI engine, which has not been disabled. For instance, if you are playing black and you have entered 18, 0 for your next move, you will see a black stone placed at position S1 on the AI console. And if the AI decides to place a stone at coordiates 3, 15, youb will notice something in the form of "Proposed move: D16" on the AI console.
+
+*Note:
+
+The x coordinate [0-18] in the client console translates to a character from [A-S] in the AI console, and the y coordinate [0-18] translates to an integer from range [1-19].
 
 ## **Citations**
 @misc{ELFOpenGo2018,
