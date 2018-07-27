@@ -60,7 +60,7 @@ Download the AI engine from [here](https://github.com/Jachua/ELF).
 
 Edit the ```game_server``` field in ```scripts/elfgames/go/server_addrs.py``` to be the same IP address that you have provided for the client console. 
 
-At the ELF project root, run ```source scripts/devmode_set_pythonpath.sh```. Navigate to ```scripts/elfgames/go``` and run ```./gtp.sh path/to/modelfile.bin --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1```. 
+At the ELF project root, run ```source scripts/devmode_set_pythonpath.sh```. Navigate to ```scripts/elfgames/go``` and run ```./gtp.sh /../../pretrained-go-19x19-v0.bin --verbose --gpu 0 --num_block 20 --dim 224 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16 --mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1```. 
 
 *As noted in the original repo, ```mcts_rollout_per_thread``` can be modified to tune the AI response rate. 
 
@@ -68,7 +68,7 @@ You should now be able to play the game with OpenGo via the client console.
 
 ## **How it works**
 
-Once the server and the clients properly set up, the client console will ask you to choose the side you would like to play on. If you choose black, it will then prompts you to enther the coordinate where you want to make the first move. If you choose white, it will display where OpenGo has placed a stone, and you will see messages such as "AI placed on stone on coordinates 15, 15". The game thus progresses by logging the moves received from the client console and OpenGo in turn. 
+Once the server and the clients are properly set up, the client console will ask you to choose the side you would like to play on. If you choose black, it will then prompt you to enther the coordinate where you want to make the first move. If you choose white, it will display where OpenGo has placed a stone, and you will see messages such as "AI placed on stone on coordinates 15, 15". The game thus progresses by logging the moves received from the client console and OpenGo in turn. 
 
 You may also observe how the game proceeds through the original CLI for the AI engine, which has not been disabled. For instance, if you are playing black and you have entered 18, 0 for your next move, you will see a black stone placed at position S1 on the AI console. And if the AI decides to place a stone at coordiates 3, 15, youb will notice something in the form of "Proposed move: D16" on the AI console.
 
