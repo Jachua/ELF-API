@@ -18,7 +18,10 @@ $ export GOPATH=$(go env GOPATH)
 
 Installing dependencies for go:
 ```
-$ go get -u google.golang.org/grpc (or follow the instructions on [this page])(https://grpc.io/docs/quickstart/go.html).
+$ go get -u google.golang.org/grpc 
+```
+(or follow the instructions on [this page])(https://grpc.io/docs/quickstart/go.html).
+```
 $ go get github.com/nu7hatch/gouuid
 ```
 
