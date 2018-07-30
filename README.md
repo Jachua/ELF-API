@@ -16,24 +16,18 @@ $ export PATH=$PATH:$(go env GOPATH)/bin
 $ export GOPATH=$(go env GOPATH)
 ```
 
-<<<<<<< HEAD
-```go get github.com/nu7hatch/gouuid```
-
-Install grpc for python - run ```python -m pip install grpcio``` and then install grpc tools with ```python -m pip install grpcio-tools googleapis-common-protos```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
-=======
-Installing grpc for go:
+Installing dependencies for go:
 ```
-$ go get -u google.golang.org/grpc
+$ go get -u google.golang.org/grpc (or follow the instructions on [this page])(https://grpc.io/docs/quickstart/go.html).
+$ go get github.com/nu7hatch/gouuid
 ```
-or follow the instructions on [this page](https://grpc.io/docs/quickstart/go.html).
 
-Installing grpc for python:
+Installing dependencies for python:
 ```
 python -m pip install grpcio
 python -m pip install grpcio-tools googleapis-common-protos
 ```
 or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
->>>>>>> origin
 
 
 ## **Setup**
