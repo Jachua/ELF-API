@@ -369,9 +369,10 @@ class GoConsoleGTP:
 
         channel = grpc.insecure_channel('localhost:50051')
         stub = play_pb2_grpc.TurnStub(channel)
+        id = stub.NewRoom(play_pb2.State(status = True, id = "")).ID
         while not stub.HasChosen(play_pb2.State(status = True)).status:
             pass
-        AI_color = stub.GetAIPlayer(play_pb2.State(status = True)).color
+        AI_color = stub.GetAIPlayer(play_pb2.State(status = True, ID = id)).color
         human_color = AI_color % 2 + 1
         reply = dict(pi = None, a = None, V = 0)
         while True:
@@ -383,18 +384,18 @@ class GoConsoleGTP:
                 move = self.get_last_move(batch)
                 x, y = move2xy(move)
                 # print("\n\n\nCheck x, y: ", x, ", ", y, "\n\n\n")
-                _ = stub.SetMove(play_pb2.Step(x = x, y = y, player = play_pb2.Player(color =  AI_color)))
+                _ = stub.SetMove(play_pb2.Step(x = x, y = y, player = play_pb2.Player(color =  AI_color, ID = id)))
                 _ = stub.UpdateNext(play_pb2.State(status = True))
-            if stub.IsNextPlayer(play_pb2.Player(color = AI_color)).status:
+            if stub.IsNextPlayer(play_pb2.Player(color = AI_color, ID = id)).status:
                 reply["a"] = self.actions["skip"]
                 # print("\n\n\nCheck\n\n\n")
                 self.prev_player = 1
                 return reply
             # ret, msg = self.commands["genmove"](batch, items, reply)
             else:
-                while stub.IsNextPlayer(play_pb2.Player(color = human_color)).status:
+                while stub.IsNextPlayer(play_pb2.Player(color = human_color, ID = id)).status:
                     pass
-                human_xy = stub.GetMove(play_pb2.Player(color = human_color))
+                human_xy = stub.GetMove(play_pb2.Player(color = human_color, ID = id))
                 # print(self.move2action(xy2move(human_xy.x, human_xy.y)))
                 reply["a"] = self.move2action(xy2move(human_xy.x, human_xy.y))
                 self.prev_player = 2

@@ -11,6 +11,8 @@ service Turn {
     rpc GetAIPlayer (State) returns (Player) {}
     rpc HasChosen (State) returns (State) {}
     rpc HasMoved (Player) returns (State) {}
+    rpc NewRoom (State) returns (State) {}
+    rpc GetID (State) returns (State) {}
 }
 
 message Step {
@@ -21,10 +23,12 @@ message Step {
 
 message Player {
     uint32 color = 1;
+    string ID = 2;
 }
 
 message State {
     bool status = 1;
+    string ID = 2;
 }
 
 

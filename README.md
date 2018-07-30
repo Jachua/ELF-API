@@ -12,6 +12,8 @@ After installing Go by the instructions, run ```export PATH=$PATH:$(go env GOPAT
 
 Install grpc for go - run ```go get -u google.golang.org/grpc```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/go.html).
 
+```go get github.com/nu7hatch/gouuid```
+
 Install grpc for python - run ```python -m pip install grpcio``` and then install grpc tools with ```python -m pip install grpcio-tools googleapis-common-protos```, or follow the instructions on [this page](https://grpc.io/docs/quickstart/python.html).
 
 
