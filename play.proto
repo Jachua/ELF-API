@@ -13,6 +13,8 @@ service Turn {
     rpc HasMoved (Player) returns (State) {}
     rpc SetResumed (Resumed) returns (State) {}
     rpc GetResumed (State) returns (Resumed) {}
+    rpc NewRoom (State) returns (State) {}
+    rpc GetID (State) returns (State) {}
 }
 
 message Step {
