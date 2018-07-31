@@ -36,7 +36,7 @@ func (m *Step) Reset()         { *m = Step{} }
 func (m *Step) String() string { return proto.CompactTextString(m) }
 func (*Step) ProtoMessage()    {}
 func (*Step) Descriptor() ([]byte, []int) {
-	return fileDescriptor_play_bc43de76e939773e, []int{0}
+	return fileDescriptor_play_9b4be3aa24d9f8f0, []int{0}
 }
 func (m *Step) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Step.Unmarshal(m, b)
@@ -79,7 +79,6 @@ func (m *Step) GetPlayer() *Player {
 
 type Player struct {
 	Color                uint32   `protobuf:"varint,1,opt,name=color,proto3" json:"color,omitempty"`
-	ID                   string   `protobuf:"bytes,2,opt,name=ID,proto3" json:"ID,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -89,7 +88,7 @@ func (m *Player) Reset()         { *m = Player{} }
 func (m *Player) String() string { return proto.CompactTextString(m) }
 func (*Player) ProtoMessage()    {}
 func (*Player) Descriptor() ([]byte, []int) {
-	return fileDescriptor_play_bc43de76e939773e, []int{1}
+	return fileDescriptor_play_9b4be3aa24d9f8f0, []int{1}
 }
 func (m *Player) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Player.Unmarshal(m, b)
@@ -116,16 +115,8 @@ func (m *Player) GetColor() uint32 {
 	return 0
 }
 
-func (m *Player) GetID() string {
-	if m != nil {
-		return m.ID
-	}
-	return ""
-}
-
 type State struct {
 	Status               bool     `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
-	ID                   string   `protobuf:"bytes,2,opt,name=ID,proto3" json:"ID,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -135,7 +126,7 @@ func (m *State) Reset()         { *m = State{} }
 func (m *State) String() string { return proto.CompactTextString(m) }
 func (*State) ProtoMessage()    {}
 func (*State) Descriptor() ([]byte, []int) {
-	return fileDescriptor_play_bc43de76e939773e, []int{2}
+	return fileDescriptor_play_9b4be3aa24d9f8f0, []int{2}
 }
 func (m *State) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_State.Unmarshal(m, b)
@@ -162,17 +153,49 @@ func (m *State) GetStatus() bool {
 	return false
 }
 
-func (m *State) GetID() string {
+type Resumed struct {
+	Move                 []string `protobuf:"bytes,1,rep,name=move,proto3" json:"move,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Resumed) Reset()         { *m = Resumed{} }
+func (m *Resumed) String() string { return proto.CompactTextString(m) }
+func (*Resumed) ProtoMessage()    {}
+func (*Resumed) Descriptor() ([]byte, []int) {
+	return fileDescriptor_play_9b4be3aa24d9f8f0, []int{3}
+}
+func (m *Resumed) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Resumed.Unmarshal(m, b)
+}
+func (m *Resumed) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Resumed.Marshal(b, m, deterministic)
+}
+func (dst *Resumed) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Resumed.Merge(dst, src)
+}
+func (m *Resumed) XXX_Size() int {
+	return xxx_messageInfo_Resumed.Size(m)
+}
+func (m *Resumed) XXX_DiscardUnknown() {
+	xxx_messageInfo_Resumed.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Resumed proto.InternalMessageInfo
+
+func (m *Resumed) GetMove() []string {
 	if m != nil {
-		return m.ID
+		return m.Move
 	}
-	return ""
+	return nil
 }
 
 func init() {
 	proto.RegisterType((*Step)(nil), "play.Step")
 	proto.RegisterType((*Player)(nil), "play.Player")
 	proto.RegisterType((*State)(nil), "play.State")
+	proto.RegisterType((*Resumed)(nil), "play.Resumed")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -195,8 +218,8 @@ type TurnClient interface {
 	GetAIPlayer(ctx context.Context, in *State, opts ...grpc.CallOption) (*Player, error)
 	HasChosen(ctx context.Context, in *State, opts ...grpc.CallOption) (*State, error)
 	HasMoved(ctx context.Context, in *Player, opts ...grpc.CallOption) (*State, error)
-	NewRoom(ctx context.Context, in *State, opts ...grpc.CallOption) (*State, error)
-	GetID(ctx context.Context, in *State, opts ...grpc.CallOption) (*State, error)
+	SetResumed(ctx context.Context, in *Resumed, opts ...grpc.CallOption) (*State, error)
+	GetResumed(ctx context.Context, in *State, opts ...grpc.CallOption) (*Resumed, error)
 }
 
 type turnClient struct {
@@ -279,18 +302,18 @@ func (c *turnClient) HasMoved(ctx context.Context, in *Player, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *turnClient) NewRoom(ctx context.Context, in *State, opts ...grpc.CallOption) (*State, error) {
+func (c *turnClient) SetResumed(ctx context.Context, in *Resumed, opts ...grpc.CallOption) (*State, error) {
 	out := new(State)
-	err := c.cc.Invoke(ctx, "/play.Turn/NewRoom", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/play.Turn/SetResumed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *turnClient) GetID(ctx context.Context, in *State, opts ...grpc.CallOption) (*State, error) {
-	out := new(State)
-	err := c.cc.Invoke(ctx, "/play.Turn/GetID", in, out, opts...)
+func (c *turnClient) GetResumed(ctx context.Context, in *State, opts ...grpc.CallOption) (*Resumed, error) {
+	out := new(Resumed)
+	err := c.cc.Invoke(ctx, "/play.Turn/GetResumed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -307,8 +330,8 @@ type TurnServer interface {
 	GetAIPlayer(context.Context, *State) (*Player, error)
 	HasChosen(context.Context, *State) (*State, error)
 	HasMoved(context.Context, *Player) (*State, error)
-	NewRoom(context.Context, *State) (*State, error)
-	GetID(context.Context, *State) (*State, error)
+	SetResumed(context.Context, *Resumed) (*State, error)
+	GetResumed(context.Context, *State) (*Resumed, error)
 }
 
 func RegisterTurnServer(s *grpc.Server, srv TurnServer) {
@@ -459,38 +482,38 @@ func _Turn_HasMoved_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Turn_NewRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(State)
+func _Turn_SetResumed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Resumed)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TurnServer).NewRoom(ctx, in)
+		return srv.(TurnServer).SetResumed(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/play.Turn/NewRoom",
+		FullMethod: "/play.Turn/SetResumed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TurnServer).NewRoom(ctx, req.(*State))
+		return srv.(TurnServer).SetResumed(ctx, req.(*Resumed))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Turn_GetID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Turn_GetResumed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(State)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TurnServer).GetID(ctx, in)
+		return srv.(TurnServer).GetResumed(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/play.Turn/GetID",
+		FullMethod: "/play.Turn/GetResumed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TurnServer).GetID(ctx, req.(*State))
+		return srv.(TurnServer).GetResumed(ctx, req.(*State))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -532,39 +555,40 @@ var _Turn_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Turn_HasMoved_Handler,
 		},
 		{
-			MethodName: "NewRoom",
-			Handler:    _Turn_NewRoom_Handler,
+			MethodName: "SetResumed",
+			Handler:    _Turn_SetResumed_Handler,
 		},
 		{
-			MethodName: "GetID",
-			Handler:    _Turn_GetID_Handler,
+			MethodName: "GetResumed",
+			Handler:    _Turn_GetResumed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "play.proto",
 }
 
-func init() { proto.RegisterFile("play.proto", fileDescriptor_play_bc43de76e939773e) }
+func init() { proto.RegisterFile("play.proto", fileDescriptor_play_9b4be3aa24d9f8f0) }
 
-var fileDescriptor_play_bc43de76e939773e = []byte{
-	// 302 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0xcd, 0x4a, 0xf3, 0x40,
-	0x14, 0x86, 0x9b, 0xfe, 0xa4, 0xed, 0x69, 0xbf, 0x6f, 0x71, 0x10, 0x29, 0x5d, 0x95, 0xb1, 0xa5,
-	0x41, 0xa1, 0x42, 0xbd, 0x02, 0x31, 0x90, 0x64, 0x61, 0x91, 0x44, 0x2f, 0x60, 0xb4, 0x07, 0x5c,
-	0xd4, 0x4e, 0xc8, 0x9c, 0x6a, 0x72, 0x33, 0x5e, 0xab, 0x4c, 0x32, 0x42, 0x93, 0x45, 0x70, 0x37,
-	0xef, 0xe4, 0x39, 0x4f, 0xde, 0x03, 0x03, 0x90, 0x1e, 0x64, 0xb1, 0x49, 0x33, 0xc5, 0x0a, 0xfb,
-	0xe6, 0x2c, 0x42, 0xe8, 0x27, 0x4c, 0x29, 0x4e, 0xc1, 0xc9, 0x67, 0xce, 0xc2, 0xf1, 0xfe, 0xc5,
-	0x4e, 0x6e, 0x52, 0x31, 0xeb, 0x56, 0xa9, 0xc0, 0x25, 0xb8, 0x86, 0xa5, 0x6c, 0xd6, 0x5b, 0x38,
-	0xde, 0x64, 0x3b, 0xdd, 0x94, 0x9a, 0xa7, 0xf2, 0x2e, 0xb6, 0xdf, 0xc4, 0x06, 0xdc, 0xea, 0x06,
-	0x2f, 0x60, 0xf0, 0xa6, 0x0e, 0x2a, 0xb3, 0xbe, 0x2a, 0xe0, 0x7f, 0xe8, 0x46, 0x7e, 0x29, 0x1d,
-	0xc7, 0xdd, 0xc8, 0x17, 0xb7, 0x30, 0x48, 0x58, 0x32, 0xe1, 0x25, 0xb8, 0x9a, 0x25, 0x9f, 0x74,
-	0xc9, 0x8f, 0x62, 0x9b, 0x9a, 0x03, 0xdb, 0xef, 0x1e, 0xf4, 0x9f, 0x4f, 0xd9, 0x11, 0x97, 0x30,
-	0x4c, 0x88, 0x1f, 0xd5, 0x27, 0x21, 0x54, 0x55, 0xcc, 0x0a, 0xf3, 0xc9, 0xef, 0x59, 0x32, 0x89,
-	0x0e, 0xae, 0x60, 0x18, 0x58, 0xaa, 0x56, 0x78, 0x7e, 0x36, 0x23, 0x3a, 0xe8, 0x01, 0xbc, 0xa4,
-	0x7b, 0xc9, 0xb4, 0xa3, 0x9c, 0xf1, 0xdc, 0xd1, 0x14, 0xde, 0xc0, 0x34, 0xd2, 0x86, 0xb2, 0x6b,
-	0xd6, 0xad, 0x0d, 0xd8, 0x83, 0x71, 0x42, 0x7f, 0x22, 0xaf, 0x61, 0x12, 0x10, 0xdf, 0x47, 0x96,
-	0xad, 0x35, 0xa8, 0x0d, 0x8a, 0x0e, 0xae, 0x61, 0x1c, 0x4a, 0xfd, 0xf0, 0xae, 0x34, 0x1d, 0x5b,
-	0xbb, 0xae, 0x61, 0x14, 0x4a, 0x6d, 0x96, 0xdf, 0xb7, 0xff, 0x7d, 0x05, 0xc3, 0x1d, 0x7d, 0xc5,
-	0x4a, 0x7d, 0xb4, 0xfa, 0xae, 0x60, 0x10, 0x10, 0x47, 0x7e, 0x1b, 0xf4, 0xea, 0x96, 0x0f, 0xeb,
-	0xee, 0x27, 0x00, 0x00, 0xff, 0xff, 0x58, 0xcd, 0xa4, 0x42, 0x66, 0x02, 0x00, 0x00,
+var fileDescriptor_play_9b4be3aa24d9f8f0 = []byte{
+	// 312 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0xc1, 0x4e, 0xfa, 0x40,
+	0x10, 0xc6, 0xbb, 0x7f, 0x4a, 0x81, 0x01, 0x2e, 0x93, 0x7f, 0x4c, 0x43, 0xa2, 0x92, 0x0d, 0x86,
+	0x46, 0x13, 0x0e, 0xf8, 0x04, 0xc6, 0x03, 0x70, 0xd0, 0x98, 0x56, 0x1f, 0x60, 0x95, 0x49, 0x3c,
+	0x00, 0xdb, 0x74, 0x07, 0x42, 0x5f, 0xc9, 0xa7, 0x34, 0xdb, 0x2e, 0x91, 0x25, 0x46, 0xbd, 0xcd,
+	0xb7, 0xf3, 0x9b, 0x6f, 0xbe, 0x69, 0x0a, 0x90, 0xaf, 0x54, 0x39, 0xc9, 0x0b, 0xcd, 0x1a, 0x43,
+	0x5b, 0xcb, 0x39, 0x84, 0x19, 0x53, 0x8e, 0x3d, 0x10, 0xfb, 0x58, 0x0c, 0x45, 0xd2, 0x4f, 0xc5,
+	0xde, 0xaa, 0x32, 0xfe, 0x57, 0xab, 0x12, 0x47, 0x10, 0x59, 0x96, 0x8a, 0xb8, 0x31, 0x14, 0x49,
+	0x77, 0xda, 0x9b, 0x54, 0x36, 0x4f, 0xd5, 0x5b, 0xea, 0x7a, 0xf2, 0x02, 0xa2, 0xfa, 0x05, 0xff,
+	0x43, 0xf3, 0x4d, 0xaf, 0x74, 0xe1, 0xfc, 0x6a, 0x21, 0x2f, 0xa1, 0x99, 0xb1, 0x62, 0xc2, 0x33,
+	0x88, 0x0c, 0x2b, 0xde, 0x9a, 0xaa, 0xdf, 0x4e, 0x9d, 0x92, 0xe7, 0xd0, 0x4a, 0xc9, 0x6c, 0xd7,
+	0xb4, 0x44, 0x84, 0x70, 0xad, 0x77, 0x14, 0x8b, 0x61, 0x23, 0xe9, 0xa4, 0x55, 0x3d, 0xfd, 0x68,
+	0x40, 0xf8, 0xbc, 0x2d, 0x36, 0x38, 0x82, 0x56, 0x46, 0xfc, 0xa0, 0x77, 0x84, 0x50, 0x27, 0xb1,
+	0x17, 0x0c, 0xba, 0x87, 0x5a, 0x31, 0xc9, 0x00, 0xaf, 0xa0, 0x35, 0x73, 0x94, 0x97, 0x77, 0x70,
+	0x34, 0x23, 0x03, 0x4c, 0x00, 0x5e, 0xf2, 0xa5, 0x62, 0x7a, 0xa4, 0x3d, 0xe3, 0xb1, 0xc7, 0xa9,
+	0xe1, 0x0d, 0xf4, 0x16, 0xc6, 0x52, 0xee, 0x4a, 0xdf, 0xf5, 0x04, 0x4e, 0xa0, 0x93, 0xd1, 0x9f,
+	0xc8, 0x6b, 0xe8, 0xce, 0x88, 0xef, 0x16, 0x8e, 0xf5, 0x12, 0x78, 0x83, 0x32, 0xc0, 0x31, 0x74,
+	0xe6, 0xca, 0xdc, 0xbf, 0x6b, 0x43, 0x9b, 0x1f, 0xb3, 0x8e, 0xa1, 0x3d, 0x57, 0xc6, 0x1e, 0xbf,
+	0xfc, 0x6d, 0x3b, 0x64, 0xc4, 0x87, 0xcf, 0xde, 0xaf, 0x9b, 0x4e, 0x7e, 0xc3, 0xce, 0xbe, 0x58,
+	0x6f, 0xbd, 0x3f, 0x28, 0x83, 0xd7, 0xa8, 0xfa, 0xc7, 0x6e, 0x3f, 0x03, 0x00, 0x00, 0xff, 0xff,
+	0x31, 0xb1, 0x37, 0xce, 0x71, 0x02, 0x00, 0x00,
 }

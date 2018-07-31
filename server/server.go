@@ -222,6 +222,7 @@ type server struct {
 	AI         *player
 	nextPlayer uint32
 	hasChosen  bool
+	resumed    []string
 }
 
 func (s *server) IsHuman(in *pb.Player) bool {
@@ -301,6 +302,20 @@ func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 	return in, nil
 }
 
+func (s *server) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
+	s.resumed = in.Move
+	return &pb.State{Status: true}, nil
+}
+
+func (s *server) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, error) {
+	switch s.resumed {
+	case nil:
+		return &pb.Resumed{Move: make([]string, 0)}, nil
+	default:
+		return &pb.Resumed{Move: s.resumed}, nil
+	}
+}
+
 func main() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
@@ -320,6 +335,8 @@ func main() {
 		},
 		nextPlayer: 1,
 		hasChosen:  false,
+		resumed:    nil,
+		// resumed: []string{"BKD", "WFB", "BGA"},
 	}
 	pb.RegisterTurnServer(s, playServer)
 	// Register reflection service on gRPC server.
