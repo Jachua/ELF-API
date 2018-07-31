@@ -177,16 +177,15 @@ type player struct {
 	prevMove *pb.Step
 	color    uint32
 	hasMoved bool
-	ID       string
 }
 
-type server struct {
-	human      *player
-	AI         *player
-	nextPlayer uint32
-	hasChosen  bool
-	resumed    []string
-}
+// type server struct {
+// 	human      *player
+// 	AI         *player
+// 	nextPlayer uint32
+// 	hasChosen  bool
+// 	resumed    []string
+// }
 
 type room struct {
 	human      *player
@@ -198,11 +197,11 @@ type room struct {
 	isAssigned bool
 }
 
-type multServer struct {
+type server struct {
 	rooms map[string]*room
 }
 
-func (s *multServer) NewRoom(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) NewRoom(ctx context.Context, in *pb.State) (*pb.State, error) {
 	u, err := uuid.NewV4()
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -214,13 +213,11 @@ func (s *multServer) NewRoom(ctx context.Context, in *pb.State) (*pb.State, erro
 			prevMove: nil,
 			hasMoved: false,
 			color:    1,
-			ID:       id,
 		},
 		AI: &player{
 			prevMove: nil,
 			hasMoved: false,
 			color:    2,
-			ID:       id,
 		},
 		ID:         id,
 		isAssigned: false,
@@ -230,7 +227,7 @@ func (s *multServer) NewRoom(ctx context.Context, in *pb.State) (*pb.State, erro
 	return &pb.State{Status: true, ID: id}, nil
 }
 
-func (s *multServer) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 	for id, room := range s.rooms {
 		if !room.isAssigned {
 			room.isAssigned = true
@@ -241,44 +238,54 @@ func (s *multServer) GetID(ctx context.Context, in *pb.State) (*pb.State, error)
 	return &pb.State{Status: false, ID: ""}, nil
 }
 
-func (s *multServer) GetMove(ctx context.Context, in *pb.Player) (*pb.Step, error) {
+func (s *server) GetMove(ctx context.Context, in *pb.Player) (*pb.Step, error) {
 	return nil, nil
 }
 
-func (s *multServer) SetMove(ctx context.Context, in *pb.Step) (*pb.State, error) {
+func (s *server) SetMove(ctx context.Context, in *pb.Step) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) HasMoved(ctx context.Context, in *pb.Player) (*pb.State, error) {
+func (s *server) HasMoved(ctx context.Context, in *pb.Player) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) IsNextPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
+func (s *server) IsNextPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
+func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
+	r := s.rooms[in.ID]
+	r.human.color = in.Color
+	r.AI.color = in.Color%2 + 1
+	r.hasChosen = true
+	return &pb.State{Status: true}, nil
+}
+
+func (s *server) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, error) {
 	return nil, nil
 }
 
-func (s *multServer) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, error) {
+func (s *server) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
 	return nil, nil
 }
 
-func (s *multServer) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
-	return nil, nil
-}
-
-func (s *multServer) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, error) {
-	return nil, nil
+func (s *server) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, error) {
+	r := s.rooms[in.ID]
+	switch r.resumed {
+	case nil:
+		return &pb.Resumed{Move: make([]string, 0)}, nil
+	default:
+		return &pb.Resumed{Move: r.resumed}, nil
+	}
 }
 
 // func (s *server) IsHuman(in *pb.Player) bool {
@@ -394,7 +401,7 @@ func main() {
 	// 	resumed:    nil,
 	// 	// resumed: []string{"BKD", "WFB", "BGA"},
 	// }
-	gameServer := &multServer{
+	gameServer := &server{
 		rooms: make(map[string]*room),
 	}
 	pb.RegisterTurnServer(s, gameServer)

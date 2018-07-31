@@ -1,18 +1,3 @@
-
-
-# import grpc
-
-# import play_pb2
-# import play_pb2_grpc
-
-# from server_addrs import addrs
-
-
-# def get_move():
-#     x = int(input("Enter coordiante x \n>"))
-#     y = int(input("Enter coorindate y \n>"))
-#     return x, y
-
 # def run():
 #     address = addrs["game_server"]
 #     if address != "":
@@ -73,7 +58,15 @@ def run():
         human_color = 1
     else:
         human_color = 2
-    _ = stub.SetPlayer(play_pb2.Player(color = human_color))
+    ID_state = ""
+    while True:
+        print("Waiting for AI to connect to server...")
+        ID_state = stub.GetID(play_pb2.State(status = True))
+        if ID_state.status:
+            break
+    ID = ID_state.ID
+    print("You are assigned with ID ", ID)
+    _ = stub.SetPlayer(play_pb2.Player(color = human_color, ID = ID))
     AI_color = human_color % 2 + 1
     while True: 
         if stub.IsNextPlayer(play_pb2.Player(color = human_color)).status:
