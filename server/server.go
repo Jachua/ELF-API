@@ -201,6 +201,23 @@ type server struct {
 	rooms map[string]*room
 }
 
+func (r *room) IsHuman(in *pb.Player) bool {
+	if in.Color == r.human.color {
+		return true
+	}
+	return false
+}
+
+func checkNil(in *pb.Step) *pb.Step {
+	switch in {
+	case nil:
+		log.Println("The player has not made a move yet.")
+		return &pb.Step{X: 20, Y: 20, Player: &pb.Player{Color: 3}}
+	default:
+		return in
+	}
+}
+
 func (s *server) NewRoom(ctx context.Context, in *pb.State) (*pb.State, error) {
 	u, err := uuid.NewV4()
 	if err != nil {
@@ -223,6 +240,7 @@ func (s *server) NewRoom(ctx context.Context, in *pb.State) (*pb.State, error) {
 		isAssigned: false,
 		nextPlayer: 1,
 		hasChosen:  false,
+		resumed:    []string{"BKD", "WFB", "BGA"},
 	}
 	return &pb.State{Status: true, ID: id}, nil
 }
@@ -239,11 +257,24 @@ func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 }
 
 func (s *server) GetMove(ctx context.Context, in *pb.Player) (*pb.Step, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	if r.IsHuman(in) {
+		return checkNil(r.human.prevMove), nil
+	}
+	return checkNil(r.AI.prevMove), nil
 }
 
 func (s *server) SetMove(ctx context.Context, in *pb.Step) (*pb.State, error) {
-	return nil, nil
+	log.Println("Registering move from next player with ID ", in.Player.ID, "...")
+	r := s.rooms[in.Player.ID]
+	if r.IsHuman(in.Player) {
+		r.human.prevMove = in
+		r.human.hasMoved = true
+	} else {
+		r.AI.prevMove = in
+		r.AI.hasMoved = true
+	}
+	return &pb.State{Status: true}, nil
 }
 
 func (s *server) HasMoved(ctx context.Context, in *pb.Player) (*pb.State, error) {
@@ -251,11 +282,16 @@ func (s *server) HasMoved(ctx context.Context, in *pb.Player) (*pb.State, error)
 }
 
 func (s *server) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	r.nextPlayer = r.nextPlayer%2 + 1
+	r.human.hasMoved = false
+	r.AI.hasMoved = false
+	return &pb.State{Status: true}, nil
 }
 
 func (s *server) IsNextPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	return &pb.State{Status: r.nextPlayer == in.Color}, nil
 }
 
 func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
@@ -267,15 +303,19 @@ func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error
 }
 
 func (s *server) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	return &pb.Player{Color: r.AI.color}, nil
 }
 
 func (s *server) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	return &pb.State{Status: r.hasChosen}, nil
 }
 
 func (s *server) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
-	return nil, nil
+	r := s.rooms[in.ID]
+	r.resumed = in.Move
+	return &pb.State{Status: true}, nil
 }
 
 func (s *server) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, error) {

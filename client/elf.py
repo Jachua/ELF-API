@@ -69,17 +69,17 @@ def run():
     _ = stub.SetPlayer(play_pb2.Player(color = human_color, ID = ID))
     AI_color = human_color % 2 + 1
     while True: 
-        if stub.IsNextPlayer(play_pb2.Player(color = human_color)).status:
+        if stub.IsNextPlayer(play_pb2.Player(color = human_color, ID = ID)).status:
             x, y = get_move()
            
-            _ = stub.SetMove(play_pb2.Step(x = x, y = y, player = play_pb2.Player(color =  human_color)))
-            _ = stub.UpdateNext(play_pb2.State(status = True))
-            human_move = stub.GetMove(play_pb2.Player(color = human_color))
+            _ = stub.SetMove(play_pb2.Step(x = x, y = y, player = play_pb2.Player(color =  human_color, ID = ID)))
+            _ = stub.UpdateNext(play_pb2.State(status = True, ID = ID))
+            human_move = stub.GetMove(play_pb2.Player(color = human_color, ID = ID))
             print("You placed a stone at coordinates: ", human_move.x, ",", human_move.y)
         else: 
-            while stub.IsNextPlayer(play_pb2.Player(color = AI_color)).status:
+            while stub.IsNextPlayer(play_pb2.Player(color = AI_color, ID = ID)).status:
                 pass
-            AI_move = stub.GetMove(play_pb2.Player(color = AI_color))
+            AI_move = stub.GetMove(play_pb2.Player(color = AI_color, ID = ID))
             print("AI places a stone at coordinates: ", AI_move.x, ",", AI_move.y)
 
 
