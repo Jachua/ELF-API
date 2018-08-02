@@ -240,7 +240,7 @@ func (s *server) NewRoom(ctx context.Context, in *pb.State) (*pb.State, error) {
 		isAssigned: false,
 		nextPlayer: 1,
 		hasChosen:  false,
-		resumed:    []string{"BKD", "WFB", "BGA"},
+		resumed:    []string{"BKD", "WFB", "BGA", "BAA", "WBB", "BCC", "WDD", "BEE", "WFF", "BGG", "WHH"},
 	}
 	return &pb.State{Status: true, ID: id}, nil
 }
@@ -249,6 +249,7 @@ func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 	for id, room := range s.rooms {
 		if !room.isAssigned {
 			room.isAssigned = true
+			log.Println("Assigned to player with ID ", id)
 			return &pb.State{Status: true, ID: id}, nil
 		}
 	}
@@ -265,7 +266,7 @@ func (s *server) GetMove(ctx context.Context, in *pb.Player) (*pb.Step, error) {
 }
 
 func (s *server) SetMove(ctx context.Context, in *pb.Step) (*pb.State, error) {
-	log.Println("Registering move from next player with ID ", in.Player.ID, "...")
+	log.Println("Registering move from next player with ID ", in.Player.ID, " color ", in.Player.Color, "...")
 	r := s.rooms[in.Player.ID]
 	if r.IsHuman(in.Player) {
 		r.human.prevMove = in
@@ -299,6 +300,7 @@ func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error
 	r.human.color = in.Color
 	r.AI.color = in.Color%2 + 1
 	r.hasChosen = true
+	// log.Println("Set player has chosen: ", r.hasChosen)
 	return &pb.State{Status: true}, nil
 }
 
@@ -309,6 +311,7 @@ func (s *server) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, err
 
 func (s *server) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
 	r := s.rooms[in.ID]
+	// log.Println("Console has chosen, ", r.hasChosen)
 	return &pb.State{Status: r.hasChosen}, nil
 }
 

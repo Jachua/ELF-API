@@ -63,9 +63,7 @@ Download the AI engine from [here](https://github.com/Jachua/ELF).
 
 Edit the ```game_server``` field in ```scripts/elfgames/go/server_addrs.py``` to be the same IP address that you have provided for the client console. 
 
-At the ELF project root, run ```source scripts/devmode_set_pythonpath.sh```. Navigate to ```scripts/elfgames/go``` and run ```./gtp.sh```. 
-
-*As noted in the original repo, ```mcts_rollout_per_thread``` can be modified to tune the AI response rate. 
+At the ELF project root, run ```source scripts/devmode_set_pythonpath.sh```. Navigate to ```scripts/elfgames/go``` and run ```./gtp.sh``` followed by 1 shell argument to set the difficulty level ```EASY```, ```MEDIUM```, or ```HARD```. The default difficulty level is ```MEDIUM```.
 
 You should now be able to play the game with OpenGo via the client console. 
 

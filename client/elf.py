@@ -77,8 +77,11 @@ def run():
             human_move = stub.GetMove(play_pb2.Player(color = human_color, ID = ID))
             print("You placed a stone at coordinates: ", human_move.x, ",", human_move.y)
         else: 
+            print("It's AI's turn to play.")
             while stub.IsNextPlayer(play_pb2.Player(color = AI_color, ID = ID)).status:
+                # print("Waiting for AI to make a move...")
                 pass
+            ("Receiving next move from AI...")
             AI_move = stub.GetMove(play_pb2.Player(color = AI_color, ID = ID))
             print("AI places a stone at coordinates: ", AI_move.x, ",", AI_move.y)
 
