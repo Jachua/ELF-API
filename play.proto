@@ -15,14 +15,14 @@ service Turn {
     rpc GetResumed (State) returns (Resumed) {}
     rpc NewRoom (State) returns (State) {}
     rpc GetID (State) returns (State) {}
-    rpc Exit (State) returns (State) {}
+    rpc GetExit (State) returns (State) {}
+    rpc CheckExit (State) returns (State) {}
 }
 
 message Step {
     sint32 x = 1;
     sint32 y = 2;
     Player player = 3;
-    bool quit = 4;
 }
 
 message Player {
@@ -33,7 +33,6 @@ message Player {
 message State {
     bool status = 1;
     string ID = 2;
-    bool quit = 3;
 }
 
 message Resumed {
