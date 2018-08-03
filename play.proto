@@ -17,6 +17,8 @@ service Turn {
     rpc GetID (State) returns (State) {}
     rpc SetExit (State) returns (State) {}
     rpc CheckExit (State) returns (State) {}
+    rpc SetUserID (State) returns (State) {}
+    rpc GetUserID (State) returns (State) {}
 }
 
 message Step {
