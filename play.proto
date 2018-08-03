@@ -15,6 +15,7 @@ service Turn {
     rpc GetResumed (State) returns (Resumed) {}
     rpc NewRoom (State) returns (State) {}
     rpc GetID (State) returns (State) {}
+    rpc Exit (State) returns (State) {}
 }
 
 message Step {
