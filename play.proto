@@ -35,6 +35,7 @@ message Player {
 message State {
     bool status = 1;
     string ID = 2;
+    string userID = 3;
 }
 
 message Resumed {
