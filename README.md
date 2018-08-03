@@ -23,6 +23,8 @@ $ go get -u google.golang.org/grpc
 or follow the instructions on [this page])(https://grpc.io/docs/quickstart/go.html.
 ```
 $ go get github.com/nu7hatch/gouuid
+
+$ go get -u github.com/go-sql-driver/mysql
 ```
 
 Installing dependencies for python:
