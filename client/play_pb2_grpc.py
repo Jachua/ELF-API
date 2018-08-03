@@ -74,8 +74,8 @@ class TurnStub(object):
         request_serializer=play__pb2.State.SerializeToString,
         response_deserializer=play__pb2.State.FromString,
         )
-    self.GetExit = channel.unary_unary(
-        '/play.Turn/GetExit',
+    self.SetExit = channel.unary_unary(
+        '/play.Turn/SetExit',
         request_serializer=play__pb2.State.SerializeToString,
         response_deserializer=play__pb2.State.FromString,
         )
@@ -174,7 +174,7 @@ class TurnServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def GetExit(self, request, context):
+  def SetExit(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -251,8 +251,8 @@ def add_TurnServicer_to_server(servicer, server):
           request_deserializer=play__pb2.State.FromString,
           response_serializer=play__pb2.State.SerializeToString,
       ),
-      'GetExit': grpc.unary_unary_rpc_method_handler(
-          servicer.GetExit,
+      'SetExit': grpc.unary_unary_rpc_method_handler(
+          servicer.SetExit,
           request_deserializer=play__pb2.State.FromString,
           response_serializer=play__pb2.State.SerializeToString,
       ),

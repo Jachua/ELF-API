@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='play.proto',
   package='play',
   syntax='proto3',
-  serialized_pb=_b('\n\nplay.proto\x12\x04play\":\n\x04Step\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\x12\x1c\n\x06player\x18\x03 \x01(\x0b\x32\x0c.play.Player\"#\n\x06Player\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\n\n\x02ID\x18\x02 \x01(\t\"#\n\x05State\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\n\n\x02ID\x18\x02 \x01(\t\"#\n\x07Resumed\x12\x0c\n\x04move\x18\x01 \x03(\t\x12\n\n\x02ID\x18\x02 \x01(\t2\xc6\x04\n\x04Turn\x12$\n\x07SetMove\x12\n.play.Step\x1a\x0b.play.State\"\x00\x12%\n\x07GetMove\x12\x0c.play.Player\x1a\n.play.Step\"\x00\x12(\n\nUpdateNext\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12+\n\x0cIsNextPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12(\n\tSetPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\x0bGetAIPlayer\x12\x0b.play.State\x1a\x0c.play.Player\"\x00\x12\'\n\tHasChosen\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\x08HasMoved\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\nSetResumed\x12\r.play.Resumed\x1a\x0b.play.State\"\x00\x12*\n\nGetResumed\x12\x0b.play.State\x1a\r.play.Resumed\"\x00\x12%\n\x07NewRoom\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12#\n\x05GetID\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12%\n\x07GetExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\tCheckExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\nplay.proto\x12\x04play\":\n\x04Step\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\x12\x1c\n\x06player\x18\x03 \x01(\x0b\x32\x0c.play.Player\"#\n\x06Player\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\n\n\x02ID\x18\x02 \x01(\t\"#\n\x05State\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\n\n\x02ID\x18\x02 \x01(\t\"#\n\x07Resumed\x12\x0c\n\x04move\x18\x01 \x03(\t\x12\n\n\x02ID\x18\x02 \x01(\t2\xc6\x04\n\x04Turn\x12$\n\x07SetMove\x12\n.play.Step\x1a\x0b.play.State\"\x00\x12%\n\x07GetMove\x12\x0c.play.Player\x1a\n.play.Step\"\x00\x12(\n\nUpdateNext\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12+\n\x0cIsNextPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12(\n\tSetPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\x0bGetAIPlayer\x12\x0b.play.State\x1a\x0c.play.Player\"\x00\x12\'\n\tHasChosen\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\x08HasMoved\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\nSetResumed\x12\r.play.Resumed\x1a\x0b.play.State\"\x00\x12*\n\nGetResumed\x12\x0b.play.State\x1a\r.play.Resumed\"\x00\x12%\n\x07NewRoom\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12#\n\x05GetID\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12%\n\x07SetExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\tCheckExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x62\x06proto3')
 )
 
 
@@ -338,8 +338,8 @@ _TURN = _descriptor.ServiceDescriptor(
     options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='GetExit',
-    full_name='play.Turn.GetExit',
+    name='SetExit',
+    full_name='play.Turn.SetExit',
     index=12,
     containing_service=None,
     input_type=_STATE,
