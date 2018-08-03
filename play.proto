@@ -22,6 +22,7 @@ message Step {
     uint32 x = 1;
     uint32 y = 2;
     Player player = 3;
+    bool quit = 4;
 }
 
 message Player {
@@ -32,6 +33,7 @@ message Player {
 message State {
     bool status = 1;
     string ID = 2;
+    bool quit = 3;
 }
 
 message Resumed {
