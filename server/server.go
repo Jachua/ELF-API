@@ -36,6 +36,7 @@ type room struct {
 	ID         string
 	isAssigned bool
 	endGame    bool
+	userID     string
 }
 
 type server struct {
@@ -136,7 +137,7 @@ func (s *server) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error
 
 func (s *server) IsNextPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
 	r := s.rooms[in.ID]
-	return &pb.State{Status: r.nextPlayer == in.Color, Quit: r.endGame}, nil
+	return &pb.State{Status: r.nextPlayer == in.Color}, nil
 }
 
 func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
@@ -156,7 +157,7 @@ func (s *server) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, err
 func (s *server) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
 	r := s.rooms[in.ID]
 	// log.Println("Console has chosen, ", r.hasChosen)
-	return &pb.State{Status: r.hasChosen, Quit: r.endGame}, nil
+	return &pb.State{Status: r.hasChosen}, nil
 }
 
 func (s *server) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
@@ -175,10 +176,19 @@ func (s *server) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, err
 	}
 }
 
-func (s *server) Exit(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) SetExit(ctx context.Context, in *pb.State) (*pb.State, error) {
 	r := s.rooms[in.ID]
 	r.endGame = true
 	return &pb.State{Status: true}, nil
+}
+
+func (s *server) CheckExit(ctx context.Context, in *pb.State) (*pb.State, error) {
+	r := s.rooms[in.ID]
+	if goExit := r.endGame; goExit {
+		delete(s.rooms, in.ID)
+		return &pb.State{Status: true}, nil
+	}
+	return &pb.State{Status: false}, nil
 }
 
 func main() {
