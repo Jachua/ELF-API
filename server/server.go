@@ -36,11 +36,11 @@ type room struct {
 	ID         string
 	isAssigned bool
 	endGame    bool
-	userID     string
 }
 
 type server struct {
-	rooms map[string]*room
+	rooms    map[string]*room
+	prevSess map[string][]string
 }
 
 func (r *room) IsHuman(in *pb.Player) bool {
@@ -92,6 +92,14 @@ func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 	for id, room := range s.rooms {
 		if !room.isAssigned {
 			room.isAssigned = true
+			if in.ID != "" {
+				if val, ok := s.prevSess[in.ID]; ok {
+					room.resumed = val
+				} else {
+					err := status.Error(codes.NotFound, "Session with the given ID does not exist.")
+					return nil, err
+				}
+			}
 			log.Println("Assigned to player with ID ", id)
 			return &pb.State{Status: true, ID: id}, nil
 		}
@@ -199,6 +207,9 @@ func main() {
 	s := grpc.NewServer()
 	gameServer := &server{
 		rooms: make(map[string]*room),
+		// prevSess: map[string][]string{
+		// 	"AAA": []string{"BKD", "WFB", "BGA", "BAA", "WBB", "BCC", "WDD", "BEE", "WFF", "BGG", "WHH"},
+		// },
 	}
 	pb.RegisterTurnServer(s, gameServer)
 	// Register reflection service on gRPC server.

@@ -35,12 +35,22 @@ def run():
     info = {'ID': "", 'color': 1}
 
     def reset():
+        is_resumed = input("Would you like to resume the game from a previous session? [y/n]\n>")
+        if is_resumed.strip().lower()[0] == 'y':
+            info['ID'] = input("Enter the ID for the game you would like to play.\n>")
+            # TODO: stub.doResumed -> 
+            #       get the corresponding data from server
+            #       assign an AI with the same ID
         while True:
             try:
-                info['ID'] = stub.GetID(play_pb2.State(status = True)).ID
+                info['ID'] = stub.GetID(play_pb2.State(status = True, ID = info['ID'])).ID
                 break
             except:
-                _ = input("AI is unavailable at the moment. Press enter to try again.\n>")
+                if info['ID'] == "":
+                    _ = input("AI is unavailable at the moment. Press enter to try again.\n>")
+                else:
+                    print("Unable to retrieve session with ID ", info['ID'])
+                    info['ID'] = ""
                 continue
         print("You are assigned with ID ", info['ID'])
 
@@ -56,6 +66,7 @@ def run():
         if type(c) == str and c.strip().lower() == "exit":
             print("Ending game...")
             _ = stub.SetExit(play_pb2.State(status = True, ID = info['ID']))
+            info['ID'] = ""
             reset()
             return True
         return False

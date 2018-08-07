@@ -71,9 +71,11 @@ You should now be able to play the game with OpenGo via the client console.
 
 ## **How it works**
 
-Once the server and the clients are properly set up, the client console will ask you to choose the side you would like to play on. If you choose black, it will then prompt you to enther the coordinate where you want to make the first move. If you choose white, it will display where OpenGo has placed a stone, and you will see messages such as "AI placed on stone on coordinates 15, 15". The game thus progresses by logging the moves received from the client console and OpenGo in turn. 
+Once the server and the clients are properly set up, you would be prompted to reply whether you would like to resume from a previous session, and if so, enter the ID for that session. The client console will ask you to choose the side you would like to play on. If you choose black, it will then prompt you to enther the coordinate where you want to make the first move. If you choose white, it will display where OpenGo has placed a stone, and you will see messages such as "AI placed on stone on coordinates 15, 15". The game thus progresses by logging the moves received from the client console and OpenGo in turn. 
 
 You may also observe how the game proceeds through the original CLI for the AI engine, which has not been disabled. For instance, if you are playing black and you have entered 18, 0 for your next move, you will see a black stone placed at position S1 on the AI console. And if the AI decides to place a stone at coordiates 3, 15, youb will notice something in the form of "Proposed move: D16" on the AI console.
+
+If you want to restart the game, input "exit" in the console, which will also clear the current progress for the AI and assign it with a different ID. Once the AI becomes available, you will be able to start a new game.
 
 *Note:
 
