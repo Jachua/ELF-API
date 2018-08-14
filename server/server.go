@@ -39,7 +39,8 @@ type room struct {
 }
 
 type server struct {
-	rooms map[string]*room
+	rooms    map[string]*room
+	prevSess map[string][]string
 }
 
 func (r *room) IsHuman(in *pb.Player) bool {
@@ -91,6 +92,14 @@ func (s *server) GetID(ctx context.Context, in *pb.State) (*pb.State, error) {
 	for id, room := range s.rooms {
 		if !room.isAssigned {
 			room.isAssigned = true
+			if in.ID != "" {
+				if val, ok := s.prevSess[in.ID]; ok {
+					room.resumed = val
+				} else {
+					err := status.Error(codes.NotFound, "Session with the given ID does not exist.")
+					return nil, err
+				}
+			}
 			log.Println("Assigned to player with ID ", id)
 			return &pb.State{Status: true, ID: id}, nil
 		}
@@ -136,7 +145,7 @@ func (s *server) UpdateNext(ctx context.Context, in *pb.State) (*pb.State, error
 
 func (s *server) IsNextPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
 	r := s.rooms[in.ID]
-	return &pb.State{Status: r.nextPlayer == in.Color, Quit: r.endGame}, nil
+	return &pb.State{Status: r.nextPlayer == in.Color}, nil
 }
 
 func (s *server) SetPlayer(ctx context.Context, in *pb.Player) (*pb.State, error) {
@@ -156,7 +165,7 @@ func (s *server) GetAIPlayer(ctx context.Context, in *pb.State) (*pb.Player, err
 func (s *server) HasChosen(ctx context.Context, in *pb.State) (*pb.State, error) {
 	r := s.rooms[in.ID]
 	// log.Println("Console has chosen, ", r.hasChosen)
-	return &pb.State{Status: r.hasChosen, Quit: r.endGame}, nil
+	return &pb.State{Status: r.hasChosen}, nil
 }
 
 func (s *server) SetResumed(ctx context.Context, in *pb.Resumed) (*pb.State, error) {
@@ -175,10 +184,19 @@ func (s *server) GetResumed(ctx context.Context, in *pb.State) (*pb.Resumed, err
 	}
 }
 
-func (s *server) Exit(ctx context.Context, in *pb.State) (*pb.State, error) {
+func (s *server) SetExit(ctx context.Context, in *pb.State) (*pb.State, error) {
 	r := s.rooms[in.ID]
 	r.endGame = true
 	return &pb.State{Status: true}, nil
+}
+
+func (s *server) CheckExit(ctx context.Context, in *pb.State) (*pb.State, error) {
+	r := s.rooms[in.ID]
+	if goExit := r.endGame; goExit {
+		delete(s.rooms, in.ID)
+		return &pb.State{Status: true}, nil
+	}
+	return &pb.State{Status: false}, nil
 }
 
 func main() {
@@ -189,6 +207,9 @@ func main() {
 	s := grpc.NewServer()
 	gameServer := &server{
 		rooms: make(map[string]*room),
+		// prevSess: map[string][]string{
+		// 	"AAA": []string{"BKD", "WFB", "BGA", "BAA", "WBB", "BCC", "WDD", "BEE", "WFF", "BGG", "WHH"},
+		// },
 	}
 	pb.RegisterTurnServer(s, gameServer)
 	// Register reflection service on gRPC server.
