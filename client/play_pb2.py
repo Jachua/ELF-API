@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='play.proto',
   package='play',
   syntax='proto3',
-  serialized_pb=_b('\n\nplay.proto\x12\x04play\":\n\x04Step\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\x12\x1c\n\x06player\x18\x03 \x01(\x0b\x32\x0c.play.Player\"#\n\x06Player\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\n\n\x02ID\x18\x02 \x01(\t\"3\n\x05State\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\n\n\x02ID\x18\x02 \x01(\t\x12\x0e\n\x06userID\x18\x03 \x01(\t\"#\n\x07Resumed\x12\x0c\n\x04move\x18\x01 \x03(\t\x12\n\n\x02ID\x18\x02 \x01(\t2\xc6\x04\n\x04Turn\x12$\n\x07SetMove\x12\n.play.Step\x1a\x0b.play.State\"\x00\x12%\n\x07GetMove\x12\x0c.play.Player\x1a\n.play.Step\"\x00\x12(\n\nUpdateNext\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12+\n\x0cIsNextPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12(\n\tSetPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\x0bGetAIPlayer\x12\x0b.play.State\x1a\x0c.play.Player\"\x00\x12\'\n\tHasChosen\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\x08HasMoved\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\nSetResumed\x12\r.play.Resumed\x1a\x0b.play.State\"\x00\x12*\n\nGetResumed\x12\x0b.play.State\x1a\r.play.Resumed\"\x00\x12%\n\x07NewRoom\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12#\n\x05GetID\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12%\n\x07SetExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\tCheckExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\nplay.proto\x12\x04play\"I\n\x04Step\x12\t\n\x01x\x18\x01 \x01(\x11\x12\t\n\x01y\x18\x02 \x01(\x11\x12\x1c\n\x06player\x18\x03 \x01(\x0b\x32\x0c.play.Player\x12\r\n\x05score\x18\x04 \x01(\t\"#\n\x06Player\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\n\n\x02ID\x18\x02 \x01(\t\"B\n\x05State\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\n\n\x02ID\x18\x02 \x01(\t\x12\x0e\n\x06userID\x18\x03 \x01(\t\x12\r\n\x05score\x18\x04 \x01(\t\"#\n\x07Resumed\x12\x0c\n\x04move\x18\x01 \x03(\t\x12\n\n\x02ID\x18\x02 \x01(\t2\xc6\x04\n\x04Turn\x12$\n\x07SetMove\x12\n.play.Step\x1a\x0b.play.State\"\x00\x12%\n\x07GetMove\x12\x0c.play.Player\x1a\n.play.Step\"\x00\x12(\n\nUpdateNext\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12+\n\x0cIsNextPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12(\n\tSetPlayer\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\x0bGetAIPlayer\x12\x0b.play.State\x1a\x0c.play.Player\"\x00\x12\'\n\tHasChosen\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\x08HasMoved\x12\x0c.play.Player\x1a\x0b.play.State\"\x00\x12*\n\nSetResumed\x12\r.play.Resumed\x1a\x0b.play.State\"\x00\x12*\n\nGetResumed\x12\x0b.play.State\x1a\r.play.Resumed\"\x00\x12%\n\x07NewRoom\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12#\n\x05GetID\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12%\n\x07SetExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x12\'\n\tCheckExit\x12\x0b.play.State\x1a\x0b.play.State\"\x00\x62\x06proto3')
 )
 
 
@@ -53,6 +53,13 @@ _STEP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='score', full_name='play.Step.score', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -66,7 +73,7 @@ _STEP = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=20,
-  serialized_end=78,
+  serialized_end=93,
 )
 
 
@@ -103,8 +110,8 @@ _PLAYER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=80,
-  serialized_end=115,
+  serialized_start=95,
+  serialized_end=130,
 )
 
 
@@ -136,6 +143,13 @@ _STATE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='score', full_name='play.State.score', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -148,8 +162,8 @@ _STATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=117,
-  serialized_end=168,
+  serialized_start=132,
+  serialized_end=198,
 )
 
 
@@ -186,8 +200,8 @@ _RESUMED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=170,
-  serialized_end=205,
+  serialized_start=200,
+  serialized_end=235,
 )
 
 _STEP.fields_by_name['player'].message_type = _PLAYER
@@ -233,8 +247,8 @@ _TURN = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=208,
-  serialized_end=790,
+  serialized_start=238,
+  serialized_end=820,
   methods=[
   _descriptor.MethodDescriptor(
     name='SetMove',

@@ -23,6 +23,7 @@ message Step {
     sint32 x = 1;
     sint32 y = 2;
     Player player = 3;
+    string score = 4;
 }
 
 message Player {
@@ -34,6 +35,7 @@ message State {
     bool status = 1;
     string ID = 2;
     string userID = 3;
+    string score = 4;
 }
 
 message Resumed {
