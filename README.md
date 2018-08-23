@@ -1,5 +1,5 @@
-# API
-An interface that sets up a server to commicate with the [OpenGo AI](https://github.com/pytorch/ELF) developed by the Facebook team.
+# ELF-API
+An API that sets up a server using grpc to commicate with the [OpenGo AI](https://github.com/pytorch/ELF) developed by the Facebook team.
 
 ## **Installation**
 
